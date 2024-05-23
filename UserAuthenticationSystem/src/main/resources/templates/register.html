@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="reg.css">
+</head>
+<body>
+    <h1>Register</h1>
+    <form id="registerForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+        
+        <label for="number">Number:</label>
+        <input type="text" id="number" name="number" pattern="\d{10}" title="Number must be 10 digits" required><br>
+        <span id="numberError" style="color: red; display: none;">Number must be exactly 10 digits long.</span><br>
+        
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+        <span id="passwordError" style="color: red; display: none;">Password must be at least 8 characters long, contain uppercase and lowercase letters, numbers, and special characters.</span><br>
+        
+        <span id="emailError" style="color: red; display: none;">Email already exists</span><br>
+        
+        <button type="submit">Register</button>
+    </form>
+
+    <script>
+        function validatePassword(password) {
+            const minLength = 8;
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecialChar = /[!@#\$%\^\&*\)\(+=._-]/.test(password);
+            return password.length >= minLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
+        }
+
+        function validateNumber(number) {
+            const numberPattern = /^\d{10}$/;
+            return numberPattern.test(number);
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Get form data
+            const formData = {
+                email: document.getElementById('email').value,
+                number: document.getElementById('number').value,
+                password: document.getElementById('password').value
+            };
+
+            // Validate password
+            if (!validatePassword(formData.password)) {
+                document.getElementById('passwordError').style.display = 'inline';
+                return;
+            } else {
+                document.getElementById('passwordError').style.display = 'none';
+            }
+
+            // Validate number
+            if (!validateNumber(formData.number)) {
+                document.getElementById('numberError').style.display = 'inline';
+                return;
+            } else {
+                document.getElementById('numberError').style.display = 'none';
+            }
+
+            // Send POST request with Fetch API
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(errorMessage => { throw new Error(errorMessage); });
+                }
+                return response.text();
+            })
+            .then(data => {
+                console.log(data); // Handle successful response
+                document.getElementById('emailError').style.display = 'none';
+                alert('Registration successful');
+            })
+            .catch(error => {
+                if (error.message === 'Email already exists') {
+                    document.getElementById('emailError').style.display = 'inline';
+                } else {
+                    console.error('Error:', error); // Handle other errors
+                }
+            });
+        });
+    </script>
+</body>
+</html>

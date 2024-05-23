@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="ind.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the User Authentication System</h1>
+        <p class="description">This is a simple user authentication system. You can perform the following actions:</p>
+        <ul class="actions">
+            <li><a th:href="@{/register}">Register</a></li>
+            <li><a th:href="@{/login}">Login</a></li>
+            <li><a th:href="@{/reset-password-request}">Request Password Reset</a></li>
+        </ul>
+    </div>
+</body>
+</html>

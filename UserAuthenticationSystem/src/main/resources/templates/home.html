@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="home.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the User Authentication System</h1>
+        <div class="content">
+            <p>Hello, User! You have successfully logged in.</p>
+            <p>Use the navigation links below to explore different sections of the system:</p>
+            <ul>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/settings">Settings</a></li>
+                <li><a href="/help">Help</a></li>
+            </ul>
+        </div>
+        <button id="logoutButton">Logout</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('jwtToken');
+
+            if (!token) {
+                window.location.href = '/login';
+            }
+        });
+
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            const token = localStorage.getItem('jwtToken');
+
+            if (!token) {
+                console.error('No JWT token found in localStorage');
+                return;
+            }
+
+            fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    localStorage.removeItem('jwtToken');
+                    window.location.href = '/login';
+                } else {
+                    console.error('Logout failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
