@@ -1,0 +1,16 @@
+Database Schema
+    User Table
+	id (Primary Key, Auto Increment)
+	email (Unique)
+	number
+	password
+	reset_token
+	jwt_token
+	token_expiration
+
+Sample Data:
+
+	id	email			number		password		reset_token	jwt_token	token_expiration
+	1	user1@example.com	1234567890	hashed_password_here	NULL		NULL		NULL
+	2	user2@example.com	9876543210	hashed_password_here	NULL		NULL		NULL
+	3	user3@example.com	5678901234	hashed_password_here	NULL		NULL		NULL
